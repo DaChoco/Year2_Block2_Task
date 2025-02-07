@@ -12,6 +12,14 @@ class taxCalculations():
     def __init__(self, before_tax):
           self.beforetax = before_tax
 
+    def createEntry(self, pre_tax_income, post_tax_income):
+        print(f"""          Monthly Budget\n
+-----------------------------------------------------------------------\n
+                Monthly Income
+-----------------------------------------------------------------------\n
+        Gross Montly Income (Before tax): {pre_tax_income}\n
+        Gross Monthly Income (After tax): {post_tax_income}""")
+
     #Tax brackets from SARS
     def taxBrackets(self):
         if self.beforetax <237000:
@@ -48,16 +56,22 @@ class taxCalculations():
 
           print(
                 f"""    
-                Utilities: {utility_fee}  
-                Rent: {housing_fee} 
-                Transport: {transport_fee}    
-                Health: {healthcare_fee}    
-                Groceries: {grocery_fee}  
-                Communication: {communication_fee}""")
+                Utilities: R{utility_fee}  
+                Rent: R{housing_fee} 
+                Transport: R{transport_fee}    
+                Health: R{healthcare_fee}    
+                Groceries: R{grocery_fee}  
+                Communication: R{communication_fee}""")
           print("-------------------------------------")
           total_fee = utility_fee + housing_fee + transport_fee + healthcare_fee + grocery_fee + communication_fee
 
-          print(f"  Total Expenses: {total_fee}")
+          print(f"  Total Expenses: R{total_fee}")
+          print("--------------------------------------------")
+
+          net_income = self.aftertax - total_fee
+
+          print(f"Net Income: R{net_income}")
+          print("--------------------------------------------")
 
 #END OF CLASS, ONTO THE FUNCTIONS
 
@@ -66,12 +80,7 @@ def drawMenu():
             1. Create New Entry\n
             0. Exit\n""")
     
-def drawBudgetScreen(pre_tax_income, post_tax_income):
-    print(f"""          Monthly Budget\n
-          -------------------------\n
-                Monthly Income\n
-        Gross Montly Income (Before tax): {pre_tax_income}\n
-        Gross Monthly Income (After tax): {post_tax_income}""")
+
 
 #END OF FUNCTIONS, ONTO THE MAIN PROGRAM
 
@@ -83,13 +92,13 @@ while menu_option==1:
     if menu_option == 0:
         break
     entered_code = input("Enter User Code: ")
-    gross_income_no_tax = int(input("Enter Gross income before Tax: "))
+    gross_income_no_tax = int(input("Enter Gross Annual income before Tax: "))/12
 
     usertaxes = taxCalculations(gross_income_no_tax)
 
-    drawBudgetScreen(gross_income_no_tax, usertaxes.taxBrackets())
+    usertaxes.createEntry(gross_income_no_tax, usertaxes.taxBrackets())
 
-    print(usertaxes.expenses())
+    usertaxes.expenses()
  
 
 
