@@ -2,9 +2,11 @@ import sqlite3 as sql
 import pandas as pd
 import datetime
 
+#simple commandline based system for this  OLD company PC in Python
+
 current_date = datetime.datetime.today()
 
-salesdate = current_date.strftime("%d/%m/%Y")
+salesdate = current_date.strftime("%d/%m/%Yv%H:%M:%S")
 
 
 #the connection we need!
@@ -69,9 +71,7 @@ class PL_Product_Sales():
                 cursor = connection.cursor()
                 cursor.execute("INSERT INTO salestable (SalesDate, ProdName, SalesTotal) values (?,?,?)",(salesdate, item_name, quantity))
                 connection.commit()
-            
-                
-
+                print("This transaction was sucessful! The customer may take their items now!")
 
         except sql.Error as e:
             print(f"An error has happened: {e}")
