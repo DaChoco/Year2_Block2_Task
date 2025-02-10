@@ -19,7 +19,7 @@ class taxCalculations():
 -----------------------------------------------------------------------\n
                 Monthly Income
 -----------------------------------------------------------------------\n
-        Gross Montly Income (Before tax): {pre_tax_income}\n
+        Gross Monthly Income (Before tax): {pre_tax_income}\n
         Gross Monthly Income (After tax): {post_tax_income}""")
 
     #Tax brackets from SARS - Determines how much money they have after tax before expenses
@@ -92,10 +92,11 @@ def drawMenu():
 
 menu_option = 1
 
-while menu_option==1:
+while menu_option:
     drawMenu()
     menu_option = int(input("Select an option: "))
     if menu_option == 0:
+        print("Thank you for using this software!")
         break
     entered_code = input("Enter User Code: ")
     gross_income_no_tax = int(input("Enter Gross Annual income before Tax: "))/12
