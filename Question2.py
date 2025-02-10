@@ -29,9 +29,10 @@ class PL_Product_Sales():
         except sql.Error as e:
             print(f"An error has happened: {e}")
    
-    def updateProduct(id, name, price, quantity):
-        print("orange")
+    def updateProduct(name, price, quantity, id):
+        
         try:
+            connection.execute("UPDATE prodtable Set name = ?, price = ?, quantity = ? where ProdID = ?", (name, price, quantity, id))
             print("\n Executed Sucessfully\n")
             connection.commit()
         except sql.Error as e:
@@ -44,24 +45,20 @@ class PL_Product_Sales():
         try:
             #Select the item
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM prodtable where ProdID = 1")
+            cursor.execute("SELECT * FROM prodtable where ProdID = ?", (ID))
             #How many items are there?
             record = cursor.fetchone()
 
             quantity_remain = record[3] #quantity in stock
 
-            if quantity_remain:
-
-                quantity_remain = quantity_remain - quantity #Quantity that will be left over
-                if quantity_remain < 0:
-                    print("We cannot proceed. There is not enough stock. Please try again")
+            new_quant = quantity_remain - quantity #Quantity that will be left over
+            if quantity_remain < 0:
+                print("We cannot proceed. There is not enough stock. Please try again")
             
-                else:
-                    connection.commit()
-
-                    print(quantity_remain)
             else:
-                print("undefined number")
+                cursor.execute("Update prodtable SET ProdQuantity = ? WHERE ProdID = ?", (new_quant, ID))
+                connection.commit()
+
 
         except sql.Error as e:
             print(f"An error has happened: {e}")
@@ -100,8 +97,6 @@ while userSelection: #Menu system
 
         PL_Product_Sales.addProduct(productName, productPrice, productID, productQuantity)
 
-
-
     elif userSelection == 2:
         productID = input("Enter ID of product to remove: ")
         PL_Product_Sales.removeProduct(productID)
@@ -113,6 +108,9 @@ while userSelection: #Menu system
         productName = input("Enter new product name: ")
         productPrice = input("Enter new product price: ")
         productQuantity = input("Enter new product quantity: ")
+
+        PL_Product_Sales.updateProduct(productName, productPrice,productQuantity, productID)
+    
 
         print("\nData updated sucessfully")
     elif userSelection == 4:
