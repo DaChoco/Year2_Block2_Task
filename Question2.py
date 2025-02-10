@@ -1,17 +1,25 @@
 import sqlite3 as sql
+import pandas as pd
+
+#the connection we need!
+#Just to let the marker know, I installed Pandas via a virtual environment. This should avoid "it works on my machine" issues
+
+#connection up and running
+connection = sql.connect('PL-ProductSales.db')
+
 
 #Making boilerplate for myself to come back to later
 
 class PL_Product_Sales():
-    def addProduct(self, name, price, id):
+    def addProduct(name, price, id):
         print("Apple")
-    def removeProduct(self, id):
+    def removeProduct(id):
         print("pear")
-    def updateProduct(self, id, name, price, quantity):
+    def updateProduct(id, name, price, quantity):
         print("orange")
-    def displayProduct(self):
-        print("WOW")
-    def sellProduct(self):
+    def displayProduct(id):
+        print(pd.read_sql(f'SELECT * FROM prodtable WHERE ProdID ={id}', connection))
+    def sellProduct():
         print("we losing")
 
 def drawMenu():
@@ -29,7 +37,7 @@ userSelection = -1
 
 
 
-while userSelection:
+while userSelection: #Menu system
     drawMenu()
     userSelection = int(input("Select an option: "))
 
@@ -57,7 +65,10 @@ while userSelection:
 
         print("\nData updated sucessfully")
     elif userSelection == 4:
-        print("Product_ID/Product_Name/Product_Price/Product_Quantity\n")
+        selectedID = int(input("Select the ID of the record you want to display (Num): "))
+        print("\nProduct_ID/Product_Name/Product_Price/Product_Quantity\n")
+
+        PL_Product_Sales.displayProduct(selectedID)
         
     
 
