@@ -17,12 +17,10 @@ salesdate = current_date.strftime("%d/%m/%Yv%H:%M:%S")
 connection = sql.connect('PL-ProductSales.db')
 
 
-#Making boilerplate for myself to come back to later
-
 #Got the idea for the try except from (W3Schools, 2024)
 
 class PL_Product_Sales():
-    def addProduct(name, price, id, quantity):
+    def addProduct(name, price, quantity):
         try:
             connection.execute("INSERT INTO prodtable (ProdName, ProdPrice, ProdQuantity) values (?,?,?)", (name, price, quantity))
         except sql.Error as e:
@@ -31,7 +29,7 @@ class PL_Product_Sales():
         connection.commit()
     def removeProduct(id):
         try:
-            connection.execute("DELETE FROM prodtable WHERE ProdID =(?)", (id))
+            connection.execute("DELETE FROM prodtable WHERE ProdID =(?)", (id,))
             print("\n Executed Sucessfully\n")
             connection.commit()
         except sql.Error as e:
@@ -61,7 +59,7 @@ class PL_Product_Sales():
             item_name = record[1]
 
             new_quant = quantity_remain - quantity #Quantity that will be left over
-            if quantity_remain < 0:
+            if new_quant < 0:
                 print("We cannot proceed. There is not enough stock. Please try again with a lower purchase or select another item\n")
             
             else:
@@ -108,7 +106,7 @@ while userSelection: #Menu system
         productPrice = input("Enter a product price: ")
         productQuantity = input("Enter product quantity: ")
 
-        PL_Product_Sales.addProduct(productName, productPrice, productID, productQuantity)
+        PL_Product_Sales.addProduct(productName, productPrice, productQuantity)
 
     elif userSelection == 2:
         productID = input("Enter ID of product to remove: ")
