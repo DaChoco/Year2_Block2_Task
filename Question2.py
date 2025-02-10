@@ -1,5 +1,11 @@
 import sqlite3 as sql
 import pandas as pd
+import datetime
+
+current_date = datetime.datetime.today()
+
+salesdate = current_date.strftime("%d/%m/%Y")
+
 
 #the connection we need!
 #Just to let the marker know, I installed Pandas via a virtual environment. This should avoid "it works on my machine" issues
@@ -45,19 +51,26 @@ class PL_Product_Sales():
         try:
             #Select the item
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM prodtable where ProdID = ?", (ID))
+            cursor.execute("SELECT * FROM prodtable where ProdID = ?", (ID,))
             #How many items are there?
             record = cursor.fetchone()
 
             quantity_remain = record[3] #quantity in stock
+            item_name = record[1]
 
             new_quant = quantity_remain - quantity #Quantity that will be left over
             if quantity_remain < 0:
-                print("We cannot proceed. There is not enough stock. Please try again")
+                print("We cannot proceed. There is not enough stock. Please try again with a lower purchase or select another item\n")
             
             else:
                 cursor.execute("Update prodtable SET ProdQuantity = ? WHERE ProdID = ?", (new_quant, ID))
                 connection.commit()
+
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO salestable (SalesDate, ProdName, SalesTotal) values (?,?,?)",(salesdate, item_name, quantity))
+                connection.commit()
+            
+                
 
 
         except sql.Error as e:
