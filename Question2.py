@@ -8,7 +8,19 @@ import os.path
 #prodtable - ProdID ProdName    ProdPrice   PriceQuantity
 #salestable -SalesID SalesDate   ProdName   SalesTotal
 
+#If the file does not exist, we make the file
 path = './PL-ProductSales.db'
+if os.path.isfile(path) == False:
+    connection = sql.connect(path)
+    cursor = connection.cursor()
+
+    creation_str_prod = """CREATE TABLE prodtable(ProdID INTEGER PRIMARY KEY, ProdName TEXT, ProdPrice REAL, ProdQuantity Int);"""
+    creation_str_sale = """CREATE TABLE salestable(SalesID INTEGER PRIMARY KEY, SalesDate Blob, ProdName Text, SalesTotal Int);"""
+
+    connection.execute(creation_str_prod)
+    connection.execute(creation_str_sale)
+    connection.commit()
+    connection.close()
 
 
 #simple commandline based system for this  OLD company PC in Python
@@ -17,8 +29,7 @@ current_date = datetime.datetime.today()
 
 salesdate = current_date.strftime("%d/%m/%Yv%H:%M:%S")
 
-#Just to let the marker know, I installed Pandas via a virtual environment. This should avoid "it works on my machine" issues
-#EXTRA - The SQLite Database was installed inside such a folder as well to avoid these problems
+#Just to let the marker know, I installed Pandas via a virtual environment.
 
 #connection up and running
 connection = sql.connect('PL-ProductSales.db')
