@@ -1,6 +1,15 @@
 import sqlite3 as sql
 import pandas as pd
 import datetime
+import os.path
+
+#Table structure for my own reference
+
+#prodtable - ProdID ProdName    ProdPrice   PriceQuantity
+#salestable -SalesID SalesDate   ProdName   SalesTotal
+
+path = './PL-ProductSales.db'
+
 
 #simple commandline based system for this  OLD company PC in Python
 
@@ -8,8 +17,6 @@ current_date = datetime.datetime.today()
 
 salesdate = current_date.strftime("%d/%m/%Yv%H:%M:%S")
 
-
-#the connection we need!
 #Just to let the marker know, I installed Pandas via a virtual environment. This should avoid "it works on my machine" issues
 #EXTRA - The SQLite Database was installed inside such a folder as well to avoid these problems
 
@@ -17,16 +24,18 @@ salesdate = current_date.strftime("%d/%m/%Yv%H:%M:%S")
 connection = sql.connect('PL-ProductSales.db')
 
 
-#Got the idea for the try except from (W3Schools, 2024)
 
 class PL_Product_Sales():
+    @staticmethod
     def addProduct(name, price, quantity):
-        try:
+        try: #Error handling, SQL is error prone
             connection.execute("INSERT INTO prodtable (ProdName, ProdPrice, ProdQuantity) values (?,?,?)", (name, price, quantity))
         except sql.Error as e:
             print(f"An error has happened: {e}")
 
         connection.commit()
+
+    @staticmethod
     def removeProduct(id):
         try:
             connection.execute("DELETE FROM prodtable WHERE ProdID =(?)", (id,))
@@ -34,19 +43,22 @@ class PL_Product_Sales():
             connection.commit()
         except sql.Error as e:
             print(f"An error has happened: {e}")
-   
+
+    @staticmethod
     def updateProduct(name, price, quantity, id):
         
         try:
-            connection.execute("UPDATE prodtable Set name = ?, price = ?, quantity = ? where ProdID = ?", (name, price, quantity, id))
+            connection.execute("UPDATE prodtable Set ProdName = ?, ProdPrice = ?, ProdQuantity = ? where ProdID = ?", (name, price, quantity, id))
             print("\n Executed Sucessfully\n")
             connection.commit()
         except sql.Error as e:
             print(f"An error has happened: {e}")
-        
+
+    @staticmethod    
     def displayProduct():
         print(pd.read_sql('SELECT * FROM prodtable', connection))
 
+    @staticmethod
     def sellProduct(ID, quantity):
         try:
             #Select the item
