@@ -115,7 +115,12 @@ userSelection = -1
 
 while userSelection: #Menu system
     drawMenu()
-    userSelection = int(input("Select an option: "))
+    try:
+        userSelection = int(input("Select an option: "))
+    except ValueError:
+        print("You must input a number between that range please.")
+    except userSelection>6:
+        print("Don't write numbers bigger than 6")
 
     if userSelection == 6:
         print("Thank you for using our program")
