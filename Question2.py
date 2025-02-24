@@ -78,7 +78,7 @@ class PL_Product_Sales():
             #How many items are there?
             record = cursor.fetchone()
 
-            quantity_remain = record[3] #quantity in stock
+            quantity_remain = record[3] #quantity in stock the index represents the fields
             item_name = record[1]
 
             new_quant = quantity_remain - quantity #Quantity that will be left over
